@@ -1,0 +1,45 @@
+name: Sincronizar conteúdo para o repo do site
+
+# Em cada commit no master (edições do backoffice Sveltia), copia content/ e media/
+# para o repo do site (React-WebsiteAGFilms), cujo build da Cloudflare publica o site.
+# Precisa do secret SYNC_TOKEN: fine-grained PAT com Contents read/write no repo do site.
+
+on:
+  push:
+    branches: [master]
+
+concurrency:
+  group: sync-site
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do conteúdo
+        uses: actions/checkout@v4
+
+      - name: Checkout do site
+        uses: actions/checkout@v4
+        with:
+          repository: GirosoftInformatica/React-WebsiteAGFilms
+          token: ${{ secrets.SYNC_TOKEN }}
+          path: site
+
+      - name: Copiar conteúdo e media
+        run: |
+          rsync -a --delete content/ site/react-websiteagfilms/content/
+          rsync -a --delete media/ site/react-websiteagfilms/public/media/
+
+      - name: Commit e push no repo do site
+        run: |
+          cd site
+          git config user.name "AG Films CMS"
+          git config user.email "noreply@girosoft.pt"
+          git add react-websiteagfilms/content react-websiteagfilms/public/media
+          if git diff --cached --quiet; then
+            echo "Sem alteracoes a sincronizar."
+          else
+            git commit -m "Conteúdo: sincronização do backoffice (${GITHUB_SHA::7})"
+            git push
+          fi
