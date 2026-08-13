@@ -1,6 +1,8 @@
 # Conteúdo do website AG Films
 
-Repositório de **conteúdo** do site agfilms.tv, editado através do backoffice Sveltia CMS (`/admin` no site publicado). Os editores do cliente são colaboradores apenas deste repositório e não têm acesso ao código do site.
+Repositório de **conteúdo** do site www.agfilms.tv, editado através do backoffice Sveltia CMS (`/admin` no site publicado). Os editores do cliente são colaboradores apenas deste repositório e não têm acesso ao código do site.
+
+O repositório é **público**: o conteúdo é o mesmo que o site já serve, e assim os colaboradores do cliente não consomem seats pagos do plano Team da organização. Não pôr aqui nada que não deva ser público; o `SYNC_TOKEN` vive nos secrets do repositório e o workflow só corre em `push` para `master`, por isso um fork não lhe chega.
 
 - `content/` - documentos JSON das coleções `commercials` (Advertising), `films-tv` e `team`
 - `media/` - imagens e vídeos de preview correspondentes (`/media/...` no site)
